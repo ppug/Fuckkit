@@ -1,0 +1,36 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: ppug <ppug@users.noreply.github.com>
+Date: Thu, 10 Dec 2020 16:41:40 +1100
+Subject: [PATCH] Restore Sand Duping
+
+
+diff --git a/src/main/java/net/minecraft/server/EntityFallingBlock.java b/src/main/java/net/minecraft/server/EntityFallingBlock.java
+index 76aac1b131f314775e418339e434f4f2da2ad619..0c9bf4e833dc411397a9f2b188c9dad6cd6a0d01 100644
+--- a/src/main/java/net/minecraft/server/EntityFallingBlock.java
++++ b/src/main/java/net/minecraft/server/EntityFallingBlock.java
+@@ -65,9 +65,9 @@ public class EntityFallingBlock extends Entity {
+     @Override
+     public void tick() {
+         // Paper start - fix sand duping
+-        if (this.dead) {
+-            return;
+-        }
++        //if (this.dead) {
++        //    return;
++        //}
+         // Paper end - fix sand duping
+         if (this.block.isAir()) {
+             this.die();
+@@ -92,9 +92,9 @@ public class EntityFallingBlock extends Entity {
+             this.move(EnumMoveType.SELF, this.getMot());
+ 
+             // Paper start - fix sand duping
+-            if (this.dead) {
+-                return;
+-            }
++            //if (this.dead) {
++            //    return;
++            //}
+             // Paper end - fix sand duping
+ 
+             // Paper start - Configurable EntityFallingBlock height nerf
