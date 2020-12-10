@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: ppug <ppug@users.noreply.github.com>
+Date: Thu, 10 Dec 2020 14:14:15 +1100
+Subject: [PATCH] Fuckkit POM Changes
+
+
+diff --git a/pom.xml b/pom.xml
+index 1c33b1f4d2366116dd45478b8ad9cdb51fd6bb57..6e6e5513cd84704edc74be4683f99810312d0096 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -3,18 +3,18 @@
+          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+     <modelVersion>4.0.0</modelVersion>
+     <parent>
+-        <groupId>com.destroystokyo.paper</groupId>
+-        <artifactId>paper-parent</artifactId>
++        <groupId>xyz.australiasmp</groupId>
++        <artifactId>fuckkit-parent</artifactId>
+         <version>dev-SNAPSHOT</version>
+     </parent>
+ 
+-    <groupId>com.destroystokyo.paper</groupId>
+-    <artifactId>paper-api</artifactId>
++    <groupId>xyz.australiasmp</groupId>
++    <artifactId>fuckkit-api</artifactId>
+     <version>1.16.4-R0.1-SNAPSHOT</version>
+     <packaging>jar</packaging>
+ 
+-    <name>Paper-API</name>
+-    <url>https://github.com/PaperMC/Paper</url>
++    <name>Fuckkit-API</name>
++    <url>https://github.com/ppug/Fuckkit</url>
+     <description>An enhanced plugin API for Minecraft servers.</description>
+ 
+     <properties>
