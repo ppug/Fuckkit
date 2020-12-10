@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        java: [11, 8]
+        java: [8]
 
     steps:
     - uses: actions/checkout@v2
@@ -42,11 +42,6 @@ jobs:
         git submodule update --init --recursive
         ./fuckkit jar
         
-    - uses: actions/upload-artifact@v2
-      with:
-        name: Fuckkit-JDK${{ matrix.java }}
-        path: fuckkit-paperclip.jar
-
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
