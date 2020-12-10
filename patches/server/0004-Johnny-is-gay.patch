@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: ppug <ppug@users.noreply.github.com>
+Date: Thu, 10 Dec 2020 16:43:30 +1100
+Subject: [PATCH] Johnny is gay
+
+
+diff --git a/src/main/java/net/minecraft/server/EULA.java b/src/main/java/net/minecraft/server/EULA.java
+index b0711fb9ad75a3dcd942b4b3e634caabc5e8d4b2..caf8564098560ac2b2f8cd05eb8dead9d5700a01 100644
+--- a/src/main/java/net/minecraft/server/EULA.java
++++ b/src/main/java/net/minecraft/server/EULA.java
+@@ -70,7 +70,7 @@ public class EULA {
+                     Properties properties = new Properties();
+ 
+                     properties.setProperty("eula", "false");
+-                    properties.store(outputstream, "By changing the setting below to TRUE you are indicating your agreement to our EULA (https://account.mojang.com/documents/minecraft_eula).\nYou also agree that pugs are cutest thing on earth");  // Paper - fix lag; // Fuckkit - Brand change
++                    properties.store(outputstream, "By changing the setting below to TRUE you are indicating your agreement to our EULA (https://account.mojang.com/documents/minecraft_eula).\nYou also agree that pugs are cutest thing on earth \\nYou also agree that johnmmit is gay");  // Paper - fix lag; // Fuckkit - Brand change // Fuckkit - Johnny is gay
+                 } catch (Throwable throwable1) {
+                     throwable = throwable1;
+                     throw throwable1;
