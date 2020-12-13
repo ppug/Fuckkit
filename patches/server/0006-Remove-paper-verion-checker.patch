@@ -1,0 +1,311 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: ppug <ppug@users.noreply.github.com>
+Date: Sun, 13 Dec 2020 18:10:17 +1100
+Subject: [PATCH] Remove paper verion checker
+
+
+diff --git a/src/main/java/com/destroystokyo/paper/MSPTCommand.java b/src/main/java/com/destroystokyo/paper/MSPTCommand.java
+index d0211d4f39f9d6af1d751ac66342b42cc6d7ba6d..1f1f3ad61042ce9655c363b2ba3d5279dcdd60cc 100644
+--- a/src/main/java/com/destroystokyo/paper/MSPTCommand.java
++++ b/src/main/java/com/destroystokyo/paper/MSPTCommand.java
+@@ -38,8 +38,8 @@ public class MSPTCommand extends Command {
+         times.addAll(eval(server.tickTimes10s.getTimes()));
+         times.addAll(eval(server.tickTimes60s.getTimes()));
+ 
+-        sender.sendMessage("§6Server tick times §e(§7avg§e/§7min§e/§7max§e)§6 from last 5s§7,§6 10s§7,§6 1m§e:");
+-        sender.sendMessage(String.format("§6◴ %s§7/%s§7/%s§e, %s§7/%s§7/%s§e, %s§7/%s§7/%s", times.toArray()));
++        sender.sendMessage("Server tick times §e(§7avg§e/§7min§e/§7max§e)§6 from last 5s§7,§6 10s§7,§6 1m§e:");
++        sender.sendMessage(String.format("◴ %s§7/%s§7/%s§e, %s§7/%s§7/%s§e, %s§7/%s§7/%s", times.toArray()));
+         return true;
+     }
+ 
+diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
+deleted file mode 100644
+index 49a38c6608b652ff48ef4eaca0dd3ccb1ba570e3..0000000000000000000000000000000000000000
+--- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
++++ /dev/null
+@@ -1,133 +0,0 @@
+-package com.destroystokyo.paper;
+-
+-import com.destroystokyo.paper.util.VersionFetcher;
+-import com.google.common.base.Charsets;
+-import com.google.common.io.Resources;
+-import com.google.gson.*;
+-
+-import javax.annotation.Nonnull;
+-import javax.annotation.Nullable;
+-import java.io.*;
+-import java.net.HttpURLConnection;
+-import java.net.URL;
+-
+-public class PaperVersionFetcher implements VersionFetcher {
+-    private static final java.util.regex.Pattern VER_PATTERN = java.util.regex.Pattern.compile("^([0-9\\.]*)\\-.*R"); // R is an anchor, will always give '-R' at end
+-    private static final String GITHUB_BRANCH_NAME = "master";
+-    private static @Nullable String mcVer;
+-
+-    @Override
+-    public long getCacheTime() {
+-        return 720000;
+-    }
+-
+-    @Nonnull
+-    @Override
+-    public String getVersionMessage(@Nonnull String serverVersion) {
+-        String[] parts = serverVersion.substring("git-Paper-".length()).split("[-\\s]");
+-        String updateMessage = getUpdateStatusMessage("PaperMC/Paper", GITHUB_BRANCH_NAME, parts[0]);
+-        String history = getHistory();
+-
+-        return history != null ? history + "\n" + updateMessage : updateMessage;
+-    }
+-
+-    private static @Nullable String getMinecraftVersion() {
+-        if (mcVer == null) {
+-            java.util.regex.Matcher matcher = VER_PATTERN.matcher(org.bukkit.Bukkit.getBukkitVersion());
+-            if (matcher.find()) {
+-                String result = matcher.group();
+-                mcVer = result.substring(0, result.length() - 2); // strip 'R' anchor and trailing '-'
+-            } else {
+-                org.bukkit.Bukkit.getLogger().warning("Unable to match version to pattern! Report to PaperMC!");
+-                org.bukkit.Bukkit.getLogger().warning("Pattern: " + VER_PATTERN.toString());
+-                org.bukkit.Bukkit.getLogger().warning("Version: " + org.bukkit.Bukkit.getBukkitVersion());
+-            }
+-        }
+-
+-        return mcVer;
+-    }
+-
+-    private static String getUpdateStatusMessage(@Nonnull String repo, @Nonnull String branch, @Nonnull String versionInfo) {
+-        int distance;
+-        try {
+-            int jenkinsBuild = Integer.parseInt(versionInfo);
+-            distance = fetchDistanceFromSiteApi(jenkinsBuild, getMinecraftVersion());
+-        } catch (NumberFormatException ignored) {
+-            versionInfo = versionInfo.replace("\"", "");
+-            distance = fetchDistanceFromGitHub(repo, branch, versionInfo);
+-        }
+-
+-        switch (distance) {
+-            case -1:
+-                return "Error obtaining version information";
+-            case 0:
+-                return "You are running the latest version";
+-            case -2:
+-                return "Unknown version";
+-            default:
+-                return "You are " + distance + " version(s) behind";
+-        }
+-    }
+-
+-    private static int fetchDistanceFromSiteApi(int jenkinsBuild, @Nullable String siteApiVersion) {
+-        if (siteApiVersion == null) { return -1; }
+-        try {
+-            try (BufferedReader reader = Resources.asCharSource(
+-                new URL("https://papermc.io/api/v1/paper/" + siteApiVersion + "/latest"),
+-                Charsets.UTF_8
+-            ).openBufferedStream()) {
+-                JsonObject json = new Gson().fromJson(reader, JsonObject.class);
+-                int latest = json.get("build").getAsInt();
+-                return latest - jenkinsBuild;
+-            } catch (JsonSyntaxException ex) {
+-                ex.printStackTrace();
+-                return -1;
+-            }
+-        } catch (IOException e) {
+-            e.printStackTrace();
+-            return -1;
+-        }
+-    }
+-
+-    // Contributed by Techcable <Techcable@outlook.com> in GH-65
+-    private static int fetchDistanceFromGitHub(@Nonnull String repo, @Nonnull String branch, @Nonnull String hash) {
+-        try {
+-            HttpURLConnection connection = (HttpURLConnection) new URL("https://api.github.com/repos/" + repo + "/compare/" + branch + "..." + hash).openConnection();
+-            connection.connect();
+-            if (connection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) return -2; // Unknown commit
+-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), Charsets.UTF_8))) {
+-                JsonObject obj = new Gson().fromJson(reader, JsonObject.class);
+-                String status = obj.get("status").getAsString();
+-                switch (status) {
+-                    case "identical":
+-                        return 0;
+-                    case "behind":
+-                        return obj.get("behind_by").getAsInt();
+-                    default:
+-                        return -1;
+-                }
+-            } catch (JsonSyntaxException | NumberFormatException e) {
+-                e.printStackTrace();
+-                return -1;
+-            }
+-        } catch (IOException e) {
+-            e.printStackTrace();
+-            return -1;
+-        }
+-    }
+-
+-    @Nullable
+-    private String getHistory() {
+-        final VersionHistoryManager.VersionData data = VersionHistoryManager.INSTANCE.getVersionData();
+-        if (data == null) {
+-            return null;
+-        }
+-
+-        final String oldVersion = data.getOldVersion();
+-        if (oldVersion == null) {
+-            return null;
+-        }
+-
+-        return "Previous version: " + oldVersion;
+-    }
+-}
+diff --git a/src/main/java/com/destroystokyo/paper/VersionHistoryManager.java b/src/main/java/com/destroystokyo/paper/VersionHistoryManager.java
+deleted file mode 100644
+index aac3f66cb23d260729c2a48d8710a9de2346aa22..0000000000000000000000000000000000000000
+--- a/src/main/java/com/destroystokyo/paper/VersionHistoryManager.java
++++ /dev/null
+@@ -1,145 +0,0 @@
+-package com.destroystokyo.paper;
+-
+-import com.google.common.base.MoreObjects;
+-import com.google.gson.Gson;
+-import com.google.gson.JsonSyntaxException;
+-import java.io.BufferedReader;
+-import java.io.BufferedWriter;
+-import java.io.IOException;
+-import java.nio.charset.StandardCharsets;
+-import java.nio.file.Files;
+-import java.nio.file.Path;
+-import java.nio.file.Paths;
+-import java.nio.file.StandardOpenOption;
+-import java.util.Objects;
+-import java.util.logging.Level;
+-import java.util.logging.Logger;
+-import org.bukkit.Bukkit;
+-
+-import javax.annotation.Nonnull;
+-import javax.annotation.Nullable;
+-
+-public enum VersionHistoryManager {
+-    INSTANCE;
+-
+-    private final Gson gson = new Gson();
+-
+-    private final Logger logger = Bukkit.getLogger();
+-
+-    private VersionData currentData = null;
+-
+-    VersionHistoryManager() {
+-        final Path path = Paths.get("version_history.json");
+-
+-        if (Files.exists(path)) {
+-            // Basic file santiy checks
+-            if (!Files.isRegularFile(path)) {
+-                if (Files.isDirectory(path)) {
+-                    logger.severe(path + " is a directory, cannot be used for version history");
+-                } else {
+-                    logger.severe(path + " is not a regular file, cannot be used for version history");
+-                }
+-                // We can't continue
+-                return;
+-            }
+-
+-            try (final BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+-                currentData = gson.fromJson(reader, VersionData.class);
+-            } catch (final IOException e) {
+-                logger.log(Level.SEVERE, "Failed to read version history file '" + path + "'", e);
+-                return;
+-            } catch (final JsonSyntaxException e) {
+-                logger.log(Level.SEVERE, "Invalid json syntax for file '" + path + "'", e);
+-                return;
+-            }
+-
+-            final String version = Bukkit.getVersion();
+-            if (version == null) {
+-                logger.severe("Failed to retrieve current version");
+-                return;
+-            }
+-
+-            if (!version.equals(currentData.getCurrentVersion())) {
+-                // The version appears to have changed
+-                currentData.setOldVersion(currentData.getCurrentVersion());
+-                currentData.setCurrentVersion(version);
+-                writeFile(path);
+-            }
+-        } else {
+-            // File doesn't exist, start fresh
+-            currentData = new VersionData();
+-            // oldVersion is null
+-            currentData.setCurrentVersion(Bukkit.getVersion());
+-            writeFile(path);
+-        }
+-    }
+-
+-    private void writeFile(@Nonnull final Path path) {
+-        try (final BufferedWriter writer = Files.newBufferedWriter(
+-            path,
+-            StandardCharsets.UTF_8,
+-            StandardOpenOption.WRITE,
+-            StandardOpenOption.CREATE,
+-            StandardOpenOption.TRUNCATE_EXISTING
+-        )) {
+-            gson.toJson(currentData, writer);
+-        } catch (final IOException e) {
+-            logger.log(Level.SEVERE, "Failed to write to version history file", e);
+-        }
+-    }
+-
+-    @Nullable
+-    public VersionData getVersionData() {
+-        return currentData;
+-    }
+-
+-    public static class VersionData {
+-        private String oldVersion;
+-
+-        private String currentVersion;
+-
+-        @Nullable
+-        public String getOldVersion() {
+-            return oldVersion;
+-        }
+-
+-        public void setOldVersion(@Nullable String oldVersion) {
+-            this.oldVersion = oldVersion;
+-        }
+-
+-        @Nullable
+-        public String getCurrentVersion() {
+-            return currentVersion;
+-        }
+-
+-        public void setCurrentVersion(@Nullable String currentVersion) {
+-            this.currentVersion = currentVersion;
+-        }
+-
+-        @Override
+-        public String toString() {
+-            return MoreObjects.toStringHelper(this)
+-                .add("oldVersion", oldVersion)
+-                .add("currentVersion", currentVersion)
+-                .toString();
+-        }
+-
+-        @Override
+-        public boolean equals(@Nullable Object o) {
+-            if (this == o) {
+-                return true;
+-            }
+-            if (o == null || getClass() != o.getClass()) {
+-                return false;
+-            }
+-            final VersionData versionData = (VersionData) o;
+-            return Objects.equals(oldVersion, versionData.oldVersion) &&
+-                Objects.equals(currentVersion, versionData.currentVersion);
+-        }
+-
+-        @Override
+-        public int hashCode() {
+-            return Objects.hash(oldVersion, currentVersion);
+-        }
+-    }
+-}

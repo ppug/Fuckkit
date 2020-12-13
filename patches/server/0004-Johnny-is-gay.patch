@@ -5,7 +5,7 @@ Subject: [PATCH] Johnny is gay
 
 
 diff --git a/src/main/java/net/minecraft/server/EULA.java b/src/main/java/net/minecraft/server/EULA.java
-index b0711fb9ad75a3dcd942b4b3e634caabc5e8d4b2..caf8564098560ac2b2f8cd05eb8dead9d5700a01 100644
+index b0711fb9ad75a3dcd942b4b3e634caabc5e8d4b2..660b3dda570a20ee4c4d42d7e4b3a14f2e5bdafb 100644
 --- a/src/main/java/net/minecraft/server/EULA.java
 +++ b/src/main/java/net/minecraft/server/EULA.java
 @@ -70,7 +70,7 @@ public class EULA {
