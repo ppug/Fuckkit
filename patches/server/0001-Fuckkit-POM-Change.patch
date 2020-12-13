@@ -5,7 +5,7 @@ Subject: [PATCH] Fuckkit POM Change
 
 
 diff --git a/pom.xml b/pom.xml
-index 80f165291385f5f54def1a8e8487b209fb06a4a3..3dfc7572116fca70615b9bc62cd1a703b5790789 100644
+index 2349491a15393a450d80397dd92c5733b28a3482..c69612c9b9ad5ba407daccc9cef8abf29972d921 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,11 +1,11 @@
@@ -44,7 +44,7 @@ index 80f165291385f5f54def1a8e8487b209fb06a4a3..3dfc7572116fca70615b9bc62cd1a703
              <version>${project.version}</version>
              <scope>compile</scope>
          </dependency>
-@@ -165,7 +165,7 @@
+@@ -158,7 +158,7 @@
  
      <!-- This builds a completely 'ready to start' jar with all dependencies inside -->
      <build>
@@ -53,7 +53,7 @@ index 80f165291385f5f54def1a8e8487b209fb06a4a3..3dfc7572116fca70615b9bc62cd1a703
          <defaultGoal>clean install</defaultGoal> <!-- Paper -->
          <plugins>
              <plugin>
-@@ -173,7 +173,7 @@
+@@ -166,7 +166,7 @@
                  <artifactId>gitdescribe-maven-plugin</artifactId>
                  <version>1.3</version>
                  <configuration>

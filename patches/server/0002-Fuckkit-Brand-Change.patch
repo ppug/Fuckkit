@@ -5,10 +5,10 @@ Subject: [PATCH] Fuckkit Brand Change
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
-index 03c95b30d8a0557482d39468c058e7966114f824..25805b76ed94e1e3e1330782f4516caf0ac1ca27 100644
+index e4923ca371012188793b284cb0ed4280c31f50b6..40125326991e436b2f28f90958c63ae2ce8a0ca9 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ b/src/main/java/com/destroystokyo/paper/Metrics.java
-@@ -585,7 +585,7 @@ public class Metrics {
+@@ -582,7 +582,7 @@ public class Metrics {
              boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
              // Only start Metrics, if it's enabled in the config
              if (config.getBoolean("enabled", true)) {
@@ -17,7 +17,7 @@ index 03c95b30d8a0557482d39468c058e7966114f824..25805b76ed94e1e3e1330782f4516caf
  
                  metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
                      String minecraftVersion = Bukkit.getVersion();
-@@ -595,7 +595,7 @@ public class Metrics {
+@@ -592,7 +592,7 @@ public class Metrics {
  
                  metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Bukkit.getOnlinePlayers().size()));
                  metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() || PaperConfig.isProxyOnlineMode() ? "online" : "offline"));
@@ -40,10 +40,10 @@ index 550232cb3819138b3bae0fa1c51429485e8bc593..b0711fb9ad75a3dcd942b4b3e634caab
                      throwable = throwable1;
                      throw throwable1;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 172fc9ef9c0d3444eb99f750a17d42f130d94f73..3d1ca2f1afcc7bc4da908eee80397e269a9c804a 100644
+index 983868ef2b2d9bbec19ba8a23cb6376de015b53e..af45409aa8fc3dfa8c7e84b2c71ebf277235c854 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1449,7 +1449,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1314,7 +1314,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
@@ -53,7 +53,7 @@ index 172fc9ef9c0d3444eb99f750a17d42f130d94f73..3d1ca2f1afcc7bc4da908eee80397e26
  
      public CrashReport b(CrashReport crashreport) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 0aa1da6cc13c15d3e222986e60dc42edbe5477de..f31c10757f258c17232dcec3f273613a693d8a04 100644
+index f1bb3acf370ed71bc48116ce96396f999a34e83e..96ee417bd45e8f14294f537044ce01e7acd43674 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -232,7 +232,7 @@ import javax.annotation.Nullable; // Paper
@@ -66,10 +66,10 @@ index 0aa1da6cc13c15d3e222986e60dc42edbe5477de..f31c10757f258c17232dcec3f273613a
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 010f702ea44d2146b0745b2b4d21f948d16cc424..7c2561971cf78b4ea1c8a69ed6284dee8081b2bb 100644
+index 6095e6ef45f6e2c1188a623192362f8879f5fcd9..bc573e3e3fd9b86994e7177b301e326bdd2747ad 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
-@@ -252,7 +252,7 @@ public class Main {
+@@ -220,7 +220,7 @@ public class Main {
                      if (buildDate.before(deadline.getTime())) {
                          // Paper start - This is some stupid bullshit
                          System.err.println("*** Warning, you've not updated in a while! ***");
